@@ -17,8 +17,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _jobController = TextEditingController(); // Job için eklenen controller
+  final TextEditingController _jobController = TextEditingController();
   bool _isLoading = false;
+  bool _isPasswordVisible = false; // Şifre görünürlüğü kontrolü
   DateTime? _dateOfBirth;
 
   final List<String> _jobs = [
@@ -31,20 +32,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     'Student',
     'Lawyer',
     'Nurse',
-    'Accountant',
-    'Architect',
-    'Data Scientist',
-    'Consultant',
-    'Writer',
-    'Artist',
-    'Photographer',
-    'Business Analyst',
-    'Chef',
-    'Electrician',
-    'Pilot',
-    'Plumber',
     'Other',
   ];
+  String? _selectedJob;
 
   Future<void> saveUserData(User user) async {
     try {
@@ -52,7 +42,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         'email': user.email,
         'name': _nameController.text,
         'phone': _phoneController.text,
-        'job': _jobController.text,
+        'job': _selectedJob,
         'dob': _dateOfBirth,
         'createdAt': FieldValue.serverTimestamp(),
       });
@@ -181,12 +171,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   // Password TextField
                   TextField(
                     controller: _passwordController,
+                    obscureText: !_isPasswordVisible, // Şifreyi görünür yap
                     decoration: InputDecoration(
                       labelText: 'Password',
                       labelStyle: TextStyle(color: Colors.white),
                       filled: true,
                       fillColor: Colors.transparent,
                       prefixIcon: Icon(Icons.lock, color: Colors.white),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible; // Görünürlük değişimi
+                          });
+                        },
+                      ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(color: Colors.white, width: 1),
@@ -196,7 +200,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         borderSide: BorderSide(color: Colors.white, width: 2),
                       ),
                     ),
-                    obscureText: true,
                     style: TextStyle(color: Colors.white),
                   ),
                   SizedBox(height: 10),
@@ -269,19 +272,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       });
                     },
                     onSelected: (String selection) {
-                      _jobController.text = selection;
+                      setState(() {
+                        _selectedJob = selection;
+                      });
                     },
                     fieldViewBuilder: (BuildContext context,
                         TextEditingController textEditingController,
-                        FocusNode focusNode,
-                        VoidCallback onFieldSubmitted) {
-                      _jobController.text = textEditingController.text;
+                        FocusNode focusNode, VoidCallback onFieldSubmitted) {
                       return TextField(
                         controller: textEditingController,
                         focusNode: focusNode,
                         decoration: InputDecoration(
                           labelText: 'Job',
                           labelStyle: TextStyle(color: Colors.white),
+                          filled: true,
+                          fillColor: Colors.transparent,
                           prefixIcon: Icon(Icons.work, color: Colors.white),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
@@ -303,7 +308,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: Material(
                           child: Container(
                             width: MediaQuery.of(context).size.width - 32,
-                            color: Colors.blueAccent,
+                            color: Colors.white, // Arka plan beyaz
                             child: ListView.builder(
                               padding: EdgeInsets.all(8.0),
                               itemCount: options.length,
@@ -314,8 +319,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     onSelected(option);
                                   },
                                   child: ListTile(
-                                    title: Text(option,
-                                        style: TextStyle(color: Colors.white)),
+                                    title: Text(
+                                      option,
+                                      style: TextStyle(color: Colors.grey[800]), // Yazı rengi gri
+                                    ),
                                   ),
                                 );
                               },
