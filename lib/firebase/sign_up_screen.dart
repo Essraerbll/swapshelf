@@ -94,29 +94,62 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                      height: 40), // Buton ile form arasına boşluk ekliyoruz
+                  SizedBox(height: 40), // Buton ile form arasına boşluk ekliyoruz
                   TextField(
                     controller: _nameController,
-                    decoration: InputDecoration(labelText: 'Name'),
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      labelStyle: TextStyle(color: Colors.white),
+                      filled: true,
+                      fillColor: Colors.transparent, // Transparent background
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.white), // White border
+                      ),
+                    ),
+                    style: TextStyle(color: Colors.white), // White text color
                   ),
                   SizedBox(height: 10),
                   TextField(
                     controller: _emailController,
-                    decoration: InputDecoration(labelText: 'Email'),
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      labelStyle: TextStyle(color: Colors.white),
+                      filled: true,
+                      fillColor: Colors.transparent, // Transparent background
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.white), // White border
+                      ),
+                    ),
                     keyboardType: TextInputType.emailAddress,
+                    style: TextStyle(color: Colors.white), // White text color
                   ),
                   SizedBox(height: 10),
                   TextField(
                     controller: _passwordController,
-                    decoration: InputDecoration(labelText: 'Password'),
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      labelStyle: TextStyle(color: Colors.white),
+                      filled: true,
+                      fillColor: Colors.transparent, // Transparent background
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.white), // White border
+                      ),
+                    ),
                     obscureText: true,
+                    style: TextStyle(color: Colors.white), // White text color
                   ),
                   SizedBox(height: 10),
+                  // Phone Number Input
                   PhoneNumberField(
                     controller: _phoneController,
                     focusNode: FocusNode(),
                     onEditingComplete: () {},
+                    // Ensure this widget takes decoration parameters
+                    // If PhoneNumberField has custom properties for styling:
+                    // decoration: InputDecoration( .... ) 
                   ),
                   SizedBox(height: 20),
                   _isLoading
