@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:swapshelfproje/firebase/sign_up_screen.dart';
 import 'home_screen.dart'; // HomeScreen widget'ınızı içe aktarın
-import 'package:swapshelfproje/widgets/custom_background.dart'; // CustomBackground widget'ını import ettik
 import 'forgot_password_screen.dart'; // ForgotPasswordScreen'i import ettik
+import 'package:swapshelfproje/firebase/sign_up_screen.dart'; // SignUpScreen'i import ettik
+import 'package:swapshelfproje/widgets/custom_background.dart'; // CustomBackground widget'ını import ettik
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -46,12 +46,17 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // Firebase ile e-posta ve şifre ile giriş fonksiyonu
+  // E-posta ve şifre ile giriş fonksiyonu
   Future<void> _signInWithEmailPassword() async {
-    try {
-      final email = _emailController.text.trim();
-      final password = _passwordController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
 
+    if (email.isEmpty || password.isEmpty) {
+      _showErrorDialog('Lütfen tüm alanları doldurun.');
+      return;
+    }
+
+    try {
       // Giriş yapmaya çalış
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
@@ -67,10 +72,42 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         );
       }
-    } catch (error) {
-      print("E-posta ile Giriş Hatası: $error");
-      // Hata mesajı göstermek için buraya bir hata bildirim ekleyebilirsiniz
+    } on FirebaseAuthException catch (e) {
+      // Firebase hata kodlarına göre özel mesajları göster
+      String errorMessage = '';
+
+      if (e.code == 'user-not-found' || e.code == 'wrong-password') {
+        errorMessage = 'Geçersiz e-posta veya şifre.';
+      } else if (e.code == 'invalid-email') {
+        errorMessage = 'Geçersiz e-posta formatı.';
+      } else {
+        errorMessage = e.message ?? 'Bir hata oluştu!';
+      }
+
+      // AlertDialog ile hata mesajını göster
+      _showErrorDialog(errorMessage);
     }
+  }
+
+  // Hata mesajlarını gösteren dialog fonksiyonu
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Hata'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Tamam'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dialogu kapat
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -83,13 +120,10 @@ class _LoginScreenState extends State<LoginScreen> {
     double googleButtonWidth = buttonWidth;
 
     return Scaffold(
-      resizeToAvoidBottomInset:
-          false, // Klavye ile widget'ların kaymasını engeller
+      resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior
-            .onDrag, // Klavye manuel olarak gizlenir
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: CustomBackground(
-          // Burada CustomBackground widget'ını kullandık
           child: Padding(
             padding:
                 const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
@@ -169,7 +203,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   alignment: Alignment.centerLeft,
                   child: TextButton(
                     onPressed: () {
-                      // Şifremi Unuttum butonuna tıklandığında ForgotPasswordScreen'e yönlendir
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -191,7 +224,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: buttonWidth,
                   height: screenHeight * 0.06,
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: Colors.blueAccent,
                     borderRadius: BorderRadius.circular(32.0),
                     boxShadow: [
                       BoxShadow(
@@ -275,22 +308,24 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: screenHeight * 0.03),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: OutlinedButton(
-                    onPressed: () {
-                      // Kayıt ekranına gitmek için yönlendir
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SignUpScreen(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      'Create New Account',
-                      style: TextStyle(color: Colors.white),
+
+                SizedBox(height: screenHeight * 0.05),
+                // Create Account Button
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            SignUpScreen(), // Navigates to SignUpScreen
+                      ),
+                    );
+                  },
+                  child: Text(
+                    'Create Account',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
