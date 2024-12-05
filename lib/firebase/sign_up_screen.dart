@@ -75,18 +75,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Stack(
             children: [
-              // Geri butonunu daha aşağıya yerleştiriyoruz
               Padding(
-                padding: const EdgeInsets.only(top: 20.0), // Üstten 20px boşluk
+                padding: const EdgeInsets.only(top: 20.0),
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: IconButton(
                     icon: Icon(
                       Icons.arrow_back,
-                      color: Colors.white, // Geri butonunu beyaz yap
+                      color: Colors.white,
                     ),
                     onPressed: () {
-                      Navigator.pop(context); // Bir önceki ekrana geri dön
+                      Navigator.pop(context);
                     },
                   ),
                 ),
@@ -94,52 +93,55 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: 40), // Buton ile form arasına boşluk ekliyoruz
+                  SizedBox(height: 40),
+                  // Name TextField
                   TextField(
                     controller: _nameController,
                     decoration: InputDecoration(
                       labelText: 'Name',
                       labelStyle: TextStyle(color: Colors.white),
                       filled: true,
-                      fillColor: Colors.transparent, // Transparent background
+                      fillColor: Colors.transparent,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: Colors.white), // White border
+                        borderSide: BorderSide(color: Colors.white),
                       ),
                     ),
-                    style: TextStyle(color: Colors.white), // White text color
+                    style: TextStyle(color: Colors.white),
                   ),
                   SizedBox(height: 10),
+                  // Email TextField
                   TextField(
                     controller: _emailController,
                     decoration: InputDecoration(
                       labelText: 'Email',
                       labelStyle: TextStyle(color: Colors.white),
                       filled: true,
-                      fillColor: Colors.transparent, // Transparent background
+                      fillColor: Colors.transparent,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: Colors.white), // White border
+                        borderSide: BorderSide(color: Colors.white),
                       ),
                     ),
                     keyboardType: TextInputType.emailAddress,
-                    style: TextStyle(color: Colors.white), // White text color
+                    style: TextStyle(color: Colors.white),
                   ),
                   SizedBox(height: 10),
+                  // Password TextField
                   TextField(
                     controller: _passwordController,
                     decoration: InputDecoration(
                       labelText: 'Password',
                       labelStyle: TextStyle(color: Colors.white),
                       filled: true,
-                      fillColor: Colors.transparent, // Transparent background
+                      fillColor: Colors.transparent,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: Colors.white), // White border
+                        borderSide: BorderSide(color: Colors.white),
                       ),
                     ),
                     obscureText: true,
-                    style: TextStyle(color: Colors.white), // White text color
+                    style: TextStyle(color: Colors.white),
                   ),
                   SizedBox(height: 10),
                   // Phone Number Input
@@ -147,11 +149,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     controller: _phoneController,
                     focusNode: FocusNode(),
                     onEditingComplete: () {},
-                    // Ensure this widget takes decoration parameters
-                    // If PhoneNumberField has custom properties for styling:
-                    // decoration: InputDecoration( .... ) 
                   ),
                   SizedBox(height: 20),
+                  // Sign Up Button
                   _isLoading
                       ? CircularProgressIndicator()
                       : ElevatedButton(
